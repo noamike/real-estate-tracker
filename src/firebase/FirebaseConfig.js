@@ -30,7 +30,7 @@ let userID = null;
 onAuthStateChanged(auth,async(user)=>{
   if(user){
     //User is signed in
-    userID=user.user.uid;
+    userID=user.uid;
     console.log("Signed in anonymously with UID:",userID);
     /*
      *Potential to add other operations
@@ -47,4 +47,4 @@ onAuthStateChanged(auth,async(user)=>{
     }
   }
 });
-export{appid};
+export{app};

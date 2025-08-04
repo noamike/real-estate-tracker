@@ -1,12 +1,14 @@
 //app.js imports
 import React, {useState,useEffect} from 'react';
+import useAuth from './hooks/useAuth';
 import './App.css'; // Import the CSS file for App.js
 
-function App() {
+const App=()=>{
+  const {userID}=useAuth();
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Welcome to My React App!</h1>
+        <h1>Real Estate Deal Tracker</h1>
       </header>
       <section className="App-content">
         <p>
