@@ -28,6 +28,9 @@ export const useFirebase =() =>{
     }
     return context;
 }
+
+//Continue code from export const on the gemini setting for step by step breakdown
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
