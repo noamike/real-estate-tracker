@@ -1,6 +1,6 @@
 //app.js imports
 import React, {useState,useEffect} from 'react';
-import { FirebaseProvider,useFirebase } from './firebase/FirebaseContext';
+import { FirebaseProvider,useFirebase } from './FirebaseConfig';
 //adding more imports as needed
 
 //app components 
