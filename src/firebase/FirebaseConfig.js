@@ -19,32 +19,10 @@ const firebaseConfig={
 // Initialize Firebase
 const app=initializeApp(firebaseConfig);
 export const auth=getAuth(app);
+
 export const db=getFirestore(app);
 /*Ability to add Analytics to application over time
  *const analytics = getAnalytics(app);
 */
-//Store the UserID once Authenticated
-let userID = null;
 
-//Look for Authentication Changes
-onAuthStateChanged(auth,async(user)=>{
-  if(user){
-    //User is signed in
-    userID=user.uid;
-    console.log("Signed in anonymously with UID:",userID);
-    /*
-     *Potential to add other operations
-     *could fetch user data if needed
-     *Potential to use later
-    */
-  }else{
-    //user is signed out, attempt to sign in anonymousley
-    console.log("No user found. Signing in anonymously");
-    try{
-      await signInAnonymously(auth);
-    }catch(error){
-      console.error("Error during anonymous sign-in:",error);
-    }
-  }
-});
 export{app};
