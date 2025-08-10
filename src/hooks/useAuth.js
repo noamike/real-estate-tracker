@@ -14,29 +14,28 @@ signInAnonymously(auth);
  * @returns {{userID: string|null}} An object containing the current user's ID.
 */
 const useAuth =() => {
-    // Use the useState hook to create a state variable for the user ID.
-    // It is initialized to null and will be updated when the user is authenticated.
+    // userID is initialized to null and will be updated when the user is authenticated.
     const [userID, setUserID] = useState(null);
+    const [identifier, setIdentifier] = useState(null);
 
-    // Set up a listener for authentication state changes.
-    // The onAuthStateChanged function runs whenever the user signs in or out.
-    // This hook is called only once per component mount.
+    // The onAuthStateChanged function runs whenever the user signs in or out. This hook is called only once per component mount.
     onAuthStateChanged(auth, (user) => {
         // Check if a user object exists. If it does, the user is signed in.
         if (user) {
             // Update the state with the authenticated user's unique ID (UID).
             // This will cause components using this hook to re-render with the new ID.
             setUserID(user.uid);
+            setIdentifier(user.isAnonymous);
+            console.log('identifier is anonymous: ',identifier);
         } else {
             // If the user object is null, the user is signed out.
             // Reset the user ID state to null.
             setUserID(null);
         }
     });
-
     // Return the user ID state to any component that uses this hook.
     // The component can then use this value to conditionally render content.
-    return { userID };
+    return { userID, identifier };
 };
 
 export default useAuth;
