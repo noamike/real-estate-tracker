@@ -4,10 +4,12 @@ import useAuth from './hooks/useAuth';
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css'; // Import the CSS file for App.js
 import AddDealForm from "./components/AddDealForm";
+import DealList from './components/DealList';
 
 const App=()=>{
   //Create variables and states to use later 
   const [showDealForm , setShowDealForm] = useState(false);
+  const [showMyDeals, setShowMyDeals] = useState(false);
   const {userID, identifier} = useAuth();
   let welcomeMesage = 'Hello';
   if (identifier){
@@ -30,6 +32,12 @@ const App=()=>{
           Add a Deal
         </button>
         {showDealForm && <AddDealForm/>}
+      </section>
+      <section className='App-content'>
+        <button className='App-button' onClick ={()=>setShowMyDeals(!showMyDeals)}>
+          View my Deals
+        </button>
+        {showMyDeals && <DealList/>}
       </section>
       {/* You'll add other components here later */}
     </div>
