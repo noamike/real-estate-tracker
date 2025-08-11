@@ -48,7 +48,7 @@ const DealList = () => {
             <ul>
                 {deals.map((deals) => (
                     <li key={deals.id}>
-                        {deals.name} - {deals.Address}
+                        <a href="#">{deals.name}</a> - {deals.Address} 
                     </li>
                 ))}
             </ul>

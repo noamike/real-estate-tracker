@@ -9,7 +9,7 @@
  * 
  * see if we can create this from here
 */
-import { doc, setDoc, collection, addDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection, addDoc } from "firebase/firestore";
 import {db} from "../firebase/FirebaseConfig";
 import useAuth from '../hooks/useAuth';
 import {useState} from 'react';
@@ -39,9 +39,9 @@ const AddDeal = () =>{
 
         try{
             //create a doc and setting the deal ID to be the name
-            const newDealRef = doc(db, 'Deals', dealData.dealName);
+            const newDealRef = collection(db, 'Deals');
 
-            await setDoc(newDealRef, {
+            await addDoc(newDealRef, {
                 dealName: dealData.dealName,
                 dealAddress: dealData.dealAddress,
                 mainAgent: userID
