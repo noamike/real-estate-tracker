@@ -17,10 +17,13 @@ import {useState} from 'react';
 const AddDeal = () =>{
     //create variables to use later 
     const {userID} = useAuth();
+    const [isPurchase, setIsPurchase] = useState(false);
+    const [isSale, setIsSale] = useState(false);
     //1. Form Data tables
     const [dealData, setDealData] = useState({
-        dealName: '',
-        dealAddress: '',
+        dealType:'',
+        buildingName: '',
+        buildingAddress: '',
         mainAgent: '',
     });
 
@@ -42,8 +45,9 @@ const AddDeal = () =>{
             const newDealRef = collection(db, 'Deals');
 
             await addDoc(newDealRef, {
-                dealName: dealData.dealName,
-                dealAddress: dealData.dealAddress,
+                dealType: dealData.dealType,
+                buildingName: dealData.buildingName,
+                buildingAddress: dealData.buildingAddress,
                 mainAgent: userID
             });
             console.log('Document Successfully Written');
@@ -51,8 +55,9 @@ const AddDeal = () =>{
 
             //clear form
             setDealData({
-                dealName: '',
-                dealAddress: '',
+                dealType:'',
+                buildingName: '',
+                buildingAddress: '',
                 mainAgent: '',
             });
         } catch{
@@ -63,24 +68,35 @@ const AddDeal = () =>{
     return(
         <form onSubmit={handleSubmit}>
             <h2>Add a New Deal</h2>
+            <label for = "dealType">Choose Deal Type: </label>
+            <select id="dealType" name="dealType" value={dealData.dealType} onChange={handleChange} required>
+                <option value="none">-</option>
+                <option value="office">Office</option>
+                <option value="retail">Retail</option>
+                <option value="industrial">Industrial</option>
+            </select>
+            <br/>
+            <label for = "buildingName">Building Name: </label>
             <input
                 type="text"
-                name='dealName'
-                value={dealData.dealName}
+                name='buildingName'
+                value={dealData.buildingName}
                 onChange={handleChange}
-                placeholder="Deal Name"
+                placeholder="Building Name"
                 required
             />
+            <br/>
+            <label for = "buildingAddress">Building Address: </label>
             <input
                 type="text"
-                name='dealAddress'
-                value={dealData.dealAddress}
+                name='buildingAddress'
+                value={dealData.buildingAddress}
                 onChange={handleChange}
                 placeholder="Property Address"
                 required
             />
             <h3>Deal will be saved with user {userID} as main Agent</h3>
-            <button type="submit">Add Deal</button>
+            <button type="submit">Submit</button>
         </form>
     );
 };
