@@ -17,14 +17,28 @@ import {useState} from 'react';
 const AddDeal = () =>{
     //create variables to use later 
     const {userID} = useAuth();
-    const [isPurchase, setIsPurchase] = useState(false);
+    const [isLease, setIsLease] = useState(false);
     const [isSale, setIsSale] = useState(false);
     //1. Form Data tables
     const [dealData, setDealData] = useState({
+        leaseOrSale:'',
         dealType:'',
         buildingName: '',
         buildingAddress: '',
+        buildingSize:'',
+        leasedSpace:'',
         mainAgent: '',
+        //Values if deal is a lease:
+        leaseTerm:'',
+        leaseDate:'',
+        leaseExpiration:'',
+        leaseRate:'',
+        additionalCharges:'',
+        //Values if deal is a Sale
+        sellerName:'',
+        saleDate:'',
+        salePrice:'',
+        ppsq:'', //price per square foot
     });
 
     //2. Handle changes when typing in a form
@@ -45,16 +59,19 @@ const AddDeal = () =>{
             const newDealRef = collection(db, 'Deals');
 
             await addDoc(newDealRef, {
+                leaseOrSale: dealData.leaseOrSale,
                 dealType: dealData.dealType,
                 buildingName: dealData.buildingName,
                 buildingAddress: dealData.buildingAddress,
                 mainAgent: userID
+                
             });
             console.log('Document Successfully Written');
             alert('Deal Added Successfully');
 
             //clear form
             setDealData({
+                leaseOrSale:'',
                 dealType:'',
                 buildingName: '',
                 buildingAddress: '',
@@ -64,10 +81,22 @@ const AddDeal = () =>{
             console.log('Error adding document');
             alert('Failed to add deal');
         }
+
+    //4. Decide whether dropdown was picked between lease or sale
+    const handleLeaseOrSale = () =>{
+
+    };
+
     };
     return(
         <form onSubmit={handleSubmit}>
             <h2>Add a New Deal</h2>
+            <label for = "leaseOrSale">Choose Lease or Sale: </label>
+            <select id="leaseOrSale" name="leaseOrSale" value={dealData.leaseOrSale} onChange={handleChange} required>
+                <option value="lease">Lease</option>
+                <option value="sale">Sale</option>
+            </select>
+            <br/>
             <label for = "dealType">Choose Deal Type: </label>
             <select id="dealType" name="dealType" value={dealData.dealType} onChange={handleChange} required>
                 <option value="none">-</option>
