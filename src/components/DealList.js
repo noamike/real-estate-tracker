@@ -70,8 +70,9 @@ const DealList = () => {
             deals.map((deal) => (
               <li key={deal.id} style={{ cursor: 'pointer', marginBottom: '10px' }}>
                 <a href="#" onClick={(e) => { e.preventDefault(); handleSelectDeal(deal); }}>
-                  {deal.name}
-                </a> - {deal.Address}
+                    Edit Deal
+                </a> 
+                {deal.name} - {deal.Address}
                 <a href="#"> View Updates</a>
               </li>
             ))
