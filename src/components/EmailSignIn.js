@@ -22,16 +22,18 @@ const EmailSignIn = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <label>
-                Email:
-                <input
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                />
-            </label>
-            <button type="submit">Send Sign-In Link</button>
+            <div className ='form-section'>
+                <div className='form-row'>
+                    <label>Email:</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            required
+                        />
+                </div>
+            </div>
+            <button className='App-button' type="submit">Send Sign-In Link</button>
             {message && <div>{message}</div>}
         </form>
     );
