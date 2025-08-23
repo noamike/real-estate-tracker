@@ -5,18 +5,20 @@ import LoadingSpinner from './components/LoadingSpinner';
 import './App.css'; // Import the CSS file for App.js
 import AddDealForm from "./components/AddDealForm";
 import DealList from './components/DealList';
-import EmailSignIn from './components/EmailSignIn';
+import SignInOptions from './components/SignInOptions';
 
 const App=()=>{
   //Create variables and states to use later 
   const [showDealForm , setShowDealForm] = useState(false);
   const [showMyDeals, setShowMyDeals] = useState(false);
+  const { userID, logout, userEmail } = useAuth();
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Real Estate Deal Tracker</h1>
-        <EmailSignIn />
+        {!userID && <SignInOptions/>}
+        {userID && <p>Welcome, {userEmail} <br/> <button onClick={logout}>Sign Out</button></p>}
       </header>
       <section className="App-content">
         <p>

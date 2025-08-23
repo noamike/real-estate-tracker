@@ -4,6 +4,8 @@ import {
     sendSignInLinkToEmail,
     signInWithEmailLink,
     isSignInWithEmailLink,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
     signOut
 } from 'firebase/auth';
 import { auth } from '../firebase/FirebaseConfig';
@@ -21,7 +23,8 @@ const actionCodeSettings = {
 const useAuth = () => {
     // userID is initialized to null and will be updated when the user is authenticated.
     const [userID, setUserID] = useState(null);
-    const [identifier, setIdentifier] = useState(null);
+    const [identifier, setIdentifier] = useState(false);
+    const [isSignedIn, setIsSignedIn] = useState(false);
     const [emailForSignIn, setEmailForSignIn] = useState('');
     const [userEmail, setUserEmail] = useState(null);
 
@@ -46,7 +49,7 @@ const useAuth = () => {
                 signInWithEmailLink(auth, email, window.location.href)
                     .then((result) => {
                         setUserID(result.user.uid);
-                        setIdentifier('email');
+                        setIsSignedIn(true);
                         window.localStorage.removeItem('emailForSignIn');
                     })
                     .catch((error) => {
@@ -54,17 +57,6 @@ const useAuth = () => {
                     });
             }
         }
-
-        // Sign out when tab/window is closed or refreshed
-        const handleUnload = () => {
-            signOut(auth);
-        };
-        window.addEventListener('unload', handleUnload);
-
-        return () => {
-            unsubscribe();
-            window.removeEventListener('unload', handleUnload);
-        };
     }, []);
 
     // Function to send sign-in link to email
@@ -80,9 +72,37 @@ const useAuth = () => {
         }
     };
 
+    //creating user account with email and password
+    const verifyEmailPassword = async (email, password) => {
+      try {
+          // Try to sign in first
+          await signInWithEmailAndPassword(auth, email, password);
+          console.log('Signed in with email:', email);
+          return { status: 'signed-in' };
+      } catch (error) {
+              try {
+                  await createUserWithEmailAndPassword(auth, email, password);
+                  console.log('Account created for email:', email);
+                  return { status: 'created' };
+              } catch (createError) {
+                  console.error('Error creating user:', createError.code, createError.message);
+                  return { status: 'error', error: createError };
+              }
+      }
+    };
+    
+
+    const logout = async () => {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
+
     // Return the user ID state and the function to send email link to any component that uses this hook.
     // The component can then use these values to conditionally render content or trigger email sign-in.
-    return { userID, userEmail, identifier, sendEmailLink, emailForSignIn };
+    return { userID, userEmail, identifier, sendEmailLink, emailForSignIn, logout, verifyEmailPassword };
 };
 
 export default useAuth;
