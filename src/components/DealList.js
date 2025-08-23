@@ -17,9 +17,11 @@ const DealList = () => {
     setSelectedDeal(null); // Clear selected deal when fetching
     try {
       console.log('Attempting to Query Database');
+      // Query to fetch deals where mainAgent matches userID
       const q = query(collection(db, 'Deals'), where("mainAgent", "==", userID));
       const querySnapshot = await getDocs(q);
 
+      // Process the fetched documents
       const dealData = [];
       querySnapshot.forEach((doc) => {
         let propertyName = doc.data().dealName;
@@ -34,25 +36,30 @@ const DealList = () => {
     } finally {
       setLoading(false);
     }
+
+    
   };
 
+  // Handler for selecting a deal to edit
   const handleSelectDeal = (deal) => {
     setSelectedDeal(deal);
   };
 
+  // Handler for saving changes from DealEditor
   const handleSaveDeal = (updatedDeal) => {
     // Update the deal in the local state array
     setDeals(deals.map(deal => deal.id === updatedDeal.id ? updatedDeal : deal));
     setSelectedDeal(null); // Exit edit mode
   };
 
+  // Handler to cancel editing
   const handleCancelEdit = () => {
     setSelectedDeal(null); // Exit edit mode
   };
 
   return (
     <div>
-      <button onClick={fetchDeals} disabled={loading}>
+      <button className="App-button" onClick={fetchDeals} disabled={loading}>
         {loading ? 'Loading...' : 'Fetch Deals'}
       </button>
 
@@ -69,13 +76,11 @@ const DealList = () => {
         <ul>
           {deals.length > 0 ? (
             deals.map((deal) => (
-              <li key={deal.id} style={{ cursor: 'pointer', marginBottom: '10px' }}>
+              <div key={deal.id} className="" style={{ cursor: 'pointer'}}>
                 <a href="#" onClick={(e) => { e.preventDefault(); handleSelectDeal(deal); }}>
-                    Edit Deal
-                </a> 
-                {deal.name} - {deal.Address}
-                <a href="#"> View Updates</a>
-              </li>
+                  <h3>{deal.name}</h3>
+                </a>
+              </div>
             ))
           ) : (
             <p>No deals found. Click "Fetch Deals" to load them.</p>

@@ -138,7 +138,6 @@ const AddDeal = () =>{
                         <label htmlFor="sale">Sale</label>
                     </div>
                 </div>
-
             )
         }
         else if(selectedOption === 'industrial'){
@@ -149,7 +148,7 @@ const AddDeal = () =>{
 
     const buildingNameAndAddress = () =>{
         return(
-            <div>
+            <>
                 <div className="form-row">
                     <label>Deal Name:</label>
                     <input
@@ -172,7 +171,7 @@ const AddDeal = () =>{
                         required
                     />
                 </div>
-            </div>
+            </>
         )
     };
     return(

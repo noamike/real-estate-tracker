@@ -10,8 +10,9 @@ import SignInOptions from './components/SignInOptions';
 const App=()=>{
   //Create variables and states to use later 
   const [showDealForm , setShowDealForm] = useState(false);
-  const [showMyDeals, setShowMyDeals] = useState(false);
   const { userID, logout, userEmail } = useAuth();
+
+  
 
   return (
     <div className="App">
@@ -31,10 +32,8 @@ const App=()=>{
         {showDealForm && <AddDealForm/>}
       </section>
       <section className='App-content'>
-        <button className='App-button' onClick ={()=>setShowMyDeals(!showMyDeals)}>
-          View my Deals
-        </button>
-        {showMyDeals && <DealList/>}
+        {/* Fetch Deals */}
+        {<DealList/>}
       </section>
       {/* You'll add other components here later */}
     </div>

@@ -27,29 +27,33 @@ const DealEditor = ({ deal, onSave, onCancel }) => {
   };
 
   return (
-    <div style={{ padding: '20px', border: '1px solid #ccc', marginTop: '20px' }}>
-      <h3>Editing Deal: {deal.name}</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        <label htmlFor="dealAddress">Deal Address:</label>
-        <input
-          id="dealAddress"
-          type="text"
-          value={editedAddress}
-          onChange={(e) => setEditedAddress(e.target.value)}
-          disabled={loading}
-          style={{ marginLeft: '10px' }}
-        />
-      </div>
-      <div style={{ marginTop: '10px' }}>
-        <button onClick={handleSave} disabled={loading}>
-          {loading ? 'Saving...' : 'Save Changes'}
+    <form className="deal-form">
+      <h2>Edit Deal</h2>
+      {/* Form fields for editing the deal */}
+      {/* For simplicity, only editing the address here */}
+      <div className="form-section"/>
+        <div className="form-inline">
+          <div className="form-row">
+            <label>Deal Address:</label>
+            <input
+            type="text"
+            value={editedAddress}
+            onChange={(e) => setEditedAddress(e.target.value)}
+            disabled={loading}
+            />
+          </div>
+        </div>
+        
+
+        <button className="App-button" type="button" onClick={handleSave} disabled={loading}>
+          {loading ? "Saving..." : "Save Changes"}
         </button>
-        <button onClick={onCancel} disabled={loading} style={{ marginLeft: '10px' }}>
+        <button className="App-button" type="button" onClick={onCancel} disabled={loading}>
           Cancel
         </button>
-      </div>
-    </div>
+    </form>
+
+    
   );
 };
 
