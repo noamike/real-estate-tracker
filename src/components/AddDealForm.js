@@ -113,7 +113,6 @@ const AddDeal = () =>{
                 <label for="sale">Sale</label>
             </div>
 
-           
             <div>
                 Building Name: <nbsp/>
                 <input
