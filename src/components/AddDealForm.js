@@ -13,6 +13,7 @@ import { doc, setDoc, getDoc, collection, addDoc } from "firebase/firestore";
 import {db} from "../firebase/FirebaseConfig";
 import useAuth from '../hooks/useAuth';
 import {useState} from 'react';
+import { render } from "@testing-library/react";
 
 const AddDeal = () =>{
     //create variables to use later 
@@ -57,15 +58,33 @@ const AddDeal = () =>{
         try{
             //create a doc and setting the deal ID to be the name
             const newDealRef = collection(db, 'Deals');
+            if(dealData.dealType === 'lease'){
+                await addDoc(newDealRef, {
+                    dealType: dealData.dealType,                    
+                    leaseOrSale: dealData.leaseOrSale,                    
+                    dealName: dealData.dealName,
+                    buildingAddress: dealData.buildingAddress,                    
+                    leaseTerm: dealData.leaseTerm,
+                    leaseDate: dealData.leaseDate,
+                    leaseExpiration: dealData.leaseExpiration,
+                    additionalCharges: dealData.additionalCharges,
+                    mainAgent: userID
+                });
+            }
+            if(dealData.leaseOrSale === 'sale'){
+                await addDoc(newDealRef, {
+                    dealType: dealData.dealType,                    
+                    leaseOrSale: dealData.leaseOrSale,                    
+                    dealName: dealData.dealName,
+                    buildingAddress: dealData.buildingAddress,                    
+                    sellerName: dealData.sellerName,
+                    saleDate: dealData.saleDate,
+                    salePrice: dealData.salePrice,
+                    ppsq: dealData.ppsq,
+                    mainAgent: userID
+                });
+             }
 
-            await addDoc(newDealRef, {
-                leaseOrSale: dealData.leaseOrSale,
-                dealType: dealData.dealType,
-                dealName: dealData.dealName,
-                buildingAddress: dealData.buildingAddress,
-                mainAgent: userID
-                
-            });
             console.log('Document Successfully Written');
             alert('Deal Added Successfully');
 
@@ -82,66 +101,105 @@ const AddDeal = () =>{
             alert('Failed to add deal');
         }
 
-    //4. Decide whether dropdown was picked between lease or sale
-    const handleLeaseOrSale = () =>{
+        //4. Decide whether dropdown was picked between lease or sale
+        const handleLeaseOrSale = () =>{
+
+        };
 
     };
+    //5. Decide whether dropdown was picked between office, retail, or industrial
+    const [selectedOption, setSelectedOption] = useState('');
+    const handleDealType = (event) =>{
+        setSelectedOption(event.target.value);
 
+    };
+    const renderType = () =>{
+        if(selectedOption === 'office' || selectedOption === 'retail'){
+            return(
+                <div className="form-row">
+                    <label>Choose Lease or Sale:</label>
+                    <div className="radio-group">
+                        <input
+                        type="radio"
+                        id="lease"
+                        value="lease"
+                        name="leaseOrSale"
+                        onChange={handleChange}
+                        />
+                        <label htmlFor="lease">Lease</label>
+
+                        <input
+                        type="radio"
+                        id="sale"
+                        value="sale"
+                        name="leaseOrSale"
+                        onChange={handleChange}
+                        />
+                        <label htmlFor="sale">Sale</label>
+                    </div>
+                </div>
+
+            )
+        }
+        else if(selectedOption === 'industrial'){
+            dealData.leaseOrSale = 'sale';
+            dealData.dealType = 'industrial';
+        }
+    };
+
+    const buildingNameAndAddress = () =>{
+        return(
+            <div>
+                <div className="form-row">
+                    <label>Deal Name:</label>
+                    <input
+                        type="text"
+                        name='dealName'
+                        value={dealData.dealName}
+                        onChange={handleChange}
+                        placeholder="Deal Name"
+                        required
+                    />
+                </div>
+                <div className="form-row">
+                    <label>Building Address:</label>
+                    <input
+                        type="text"
+                        name='buildingAddress'
+                        value={dealData.buildingAddress}
+                        onChange={handleChange}
+                        placeholder="Property Address"
+                        required
+                    />
+                </div>
+            </div>
+        )
     };
     return(
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="deal-form">
             <h2>Add a New Deal</h2>
 
-             <div>
-                Deal Type:  <nbsp/>
-                <select id="dealType" name="dealType" value={dealData.dealType} onChange={handleChange} required>
-                    <option value="none">-</option>
+            {/* Deal Type */}
+            <div className="form-row">
+                <label htmlFor="dealType">Deal Type:</label>
+                <select id="dealType" name="dealType" value={selectedOption} onChange={handleDealType} required>
+                    <option value="none"></option>
                     <option value="office">Office</option>
                     <option value="retail">Retail</option>
                     <option value="industrial">Industrial</option>
                 </select>
+                {renderType()}
             </div>
-
-            <div>Choose Lease or Sale: <nbsp/>
-                {/* <select id="leaseOrSale" name="leaseOrSale" value={dealData.leaseOrSale} onChange={handleChange} required>
-                    <option value="lease">Lease</option>
-                    <option value="sale">Sale</option>
-                </select> */}
-                <input type="radio" id="leaseOrSale" value="lease" name="leaseOrSale" onChange={handleChange}/>
-                <label for="lease">Lease</label>
-                <input type="radio" id="leaseOrSale" value="sale" name="leaseOrSale" onChange={handleChange}/>
-                <label for="sale">Sale</label>
-            </div>
-
-            <div>
-                Building Name: <nbsp/>
-                <input
-                    type="text"
-                    name='dealName'
-                    value={dealData.dealName}
-                    onChange={handleChange}
-                    placeholder="Building Name"
-                    required
-                />
-            </div>
-            <div>
-                Building Address: <nbsp/>
-                <input
-                    type="text"
-                    name='buildingAddress'
-                    value={dealData.buildingAddress}
-                    onChange={handleChange}
-                    placeholder="Property Address"
-                    required
-                />
-            </div>
-            
 
             {/* Lease-specific fields */}
-            {dealData.leaseOrSale === 'lease' && (
-            <div>
+            {dealData.leaseOrSale === "lease" && (
+                <div className="form-section">
                 <h4>Lease Details</h4>
-                <div>Lease Term & Rate: <nbsp/>
+                {buildingNameAndAddress()}
+
+                <div className="form-row">
+                    <label>Lease Term & Rate:</label>
+                    <div className="form-inline">
                     <input
                         type="text"
                         name="leaseTerm"
@@ -150,78 +208,104 @@ const AddDeal = () =>{
                         placeholder="Lease Term"
                     />
                     <input
-                    type="text"
-                    name="leaseRate"
-                    value={dealData.leaseRate}
-                    onChange={handleChange}
-                    placeholder="Lease Rate"
+                        type="text"
+                        name="leaseRate"
+                        value={dealData.leaseRate}
+                        onChange={handleChange}
+                        placeholder="Lease Rate"
                     />
+                    </div>
                 </div>
-                <div>Lease Start and End Date: <nbsp/>
-                <input
-                    type="date"
-                    name="leaseDate"
-                    value={dealData.leaseDate}
-                    onChange={handleChange}
-                    placeholder="Lease Start Date"
-                />
-                <input
-                    type="date"
-                    name="leaseExpiration"
-                    value={dealData.leaseExpiration}
-                    onChange={handleChange}
-                    placeholder="Lease Expiration"
-                />
+
+                <div className="form-row">
+                    <label>Lease Start and End Date:</label>
+                    <div className="form-inline">
+                    <input
+                        type="date"
+                        name="leaseDate"
+                        value={dealData.leaseDate}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="date"
+                        name="leaseExpiration"
+                        value={dealData.leaseExpiration}
+                        onChange={handleChange}
+                    />
+                    </div>
                 </div>
-                <div>Additional Charges: <nbsp/>
-                <input
+
+                <div className="form-row">
+                    <label>Additional Charges:</label>
+                    <input
                     type="text"
                     name="additionalCharges"
                     value={dealData.additionalCharges}
                     onChange={handleChange}
                     placeholder="Additional Charges"
-                />
+                    />
                 </div>
-            </div>
-        )}
+                </div>
+            )}
 
-        {/* Sale-specific fields */}
-        {dealData.leaseOrSale === 'sale' && (
-            <div>
+            {/* Sale-specific fields */}
+            {dealData.leaseOrSale === "sale" && (
+                <div className="form-section">
                 <h4>Sale Details</h4>
-                <input
+                {buildingNameAndAddress()}
+
+                <div className="form-row">
+                    <label>Seller Name:</label>
+                    <input
                     type="text"
                     name="sellerName"
                     value={dealData.sellerName}
                     onChange={handleChange}
                     placeholder="Seller Name"
-                />
-                <input
+                    />
+                </div>
+
+                <div className="form-row">
+                    <label>Sale Date:</label>
+                    <input
                     type="date"
                     name="saleDate"
                     value={dealData.saleDate}
                     onChange={handleChange}
-                    placeholder="Sale Date"
-                />
-                <input
+                    />
+                </div>
+
+                <div className="form-row">
+                    <label>Sale Price:</label>
+                    <input
                     type="number"
                     name="salePrice"
                     value={dealData.salePrice}
                     onChange={handleChange}
                     placeholder="Sale Price"
-                />
-                <input
+                    />
+                </div>
+
+                <div className="form-row">
+                    <label>Price per Square Foot:</label>
+                    <input
                     type="number"
                     name="ppsq"
                     value={dealData.ppsq}
                     onChange={handleChange}
                     placeholder="Price Per Sq Ft"
-                />
-            </div>
-        )}
+                    />
+                </div>
+                </div>
+            )}
+
             <h3>Deal will be saved with user {userID} as main Agent</h3>
-            <button type="submit">Submit</button>
-        </form>
+
+            <div className="form-row button-row">
+                <button type="submit" className="App-button">Submit</button>
+            </div>
+            </form>
+
     );
 };
 export default AddDeal;
