@@ -23,7 +23,7 @@ const AddDeal = () =>{
     const [dealData, setDealData] = useState({
         leaseOrSale:'',
         dealType:'',
-        buildingName: '',
+        dealName: '',
         buildingAddress: '',
         buildingSize:'',
         leasedSpace:'',
@@ -61,7 +61,7 @@ const AddDeal = () =>{
             await addDoc(newDealRef, {
                 leaseOrSale: dealData.leaseOrSale,
                 dealType: dealData.dealType,
-                buildingName: dealData.buildingName,
+                dealName: dealData.dealName,
                 buildingAddress: dealData.buildingAddress,
                 mainAgent: userID
                 
@@ -73,7 +73,7 @@ const AddDeal = () =>{
             setDealData({
                 leaseOrSale:'',
                 dealType:'',
-                buildingName: '',
+                dealName: '',
                 buildingAddress: '',
                 mainAgent: '',
             });
@@ -91,39 +91,44 @@ const AddDeal = () =>{
     return(
         <form onSubmit={handleSubmit}>
             <h2>Add a New Deal</h2>
-            <label for = "leaseOrSale">Choose Lease or Sale: </label>
-            <select id="leaseOrSale" name="leaseOrSale" value={dealData.leaseOrSale} onChange={handleChange} required>
-                <option value="lease">Lease</option>
-                <option value="sale">Sale</option>
-            </select>
-            <br/>
-            <label for = "dealType">Choose Deal Type: </label>
-            <select id="dealType" name="dealType" value={dealData.dealType} onChange={handleChange} required>
-                <option value="none">-</option>
-                <option value="office">Office</option>
-                <option value="retail">Retail</option>
-                <option value="industrial">Industrial</option>
-            </select>
-            <br/>
-            <label for = "buildingName">Building Name: </label>
-            <input
-                type="text"
-                name='buildingName'
-                value={dealData.buildingName}
-                onChange={handleChange}
-                placeholder="Building Name"
-                required
-            />
-            <br/>
-            <label for = "buildingAddress">Building Address: </label>
-            <input
-                type="text"
-                name='buildingAddress'
-                value={dealData.buildingAddress}
-                onChange={handleChange}
-                placeholder="Property Address"
-                required
-            />
+            <div>
+                Choose Lease or Sale: 
+                <select id="leaseOrSale" name="leaseOrSale" value={dealData.leaseOrSale} onChange={handleChange} required>
+                    <option value="lease">Lease</option>
+                    <option value="sale">Sale</option>
+                </select>
+            </div>
+            <div>
+                Deal Type: 
+                <select id="dealType" name="dealType" value={dealData.dealType} onChange={handleChange} required>
+                    <option value="none">-</option>
+                    <option value="office">Office</option>
+                    <option value="retail">Retail</option>
+                    <option value="industrial">Industrial</option>
+                </select>
+            </div>
+            <div>
+                Building Name: 
+                <input
+                    type="text"
+                    name='dealName'
+                    value={dealData.dealName}
+                    onChange={handleChange}
+                    placeholder="Building Name"
+                    required
+                />
+            </div>
+            <div>
+                Building Address:
+                <input
+                    type="text"
+                    name='buildingAddress'
+                    value={dealData.buildingAddress}
+                    onChange={handleChange}
+                    placeholder="Property Address"
+                    required
+                />
+            </div>
             <h3>Deal will be saved with user {userID} as main Agent</h3>
             <button type="submit">Submit</button>
         </form>

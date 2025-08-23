@@ -23,7 +23,8 @@ const DealList = () => {
       const dealData = [];
       querySnapshot.forEach((doc) => {
         let propertyName = doc.data().dealName;
-        let propertyAddress = doc.data().dealAddress;
+        let propertyAddress = doc.data().buildingAddress;
+        console.log("Deal name is: ", propertyName);
         dealData.push({ id: doc.id, name: propertyName, Address: propertyAddress });
       });
       setDeals(dealData);
