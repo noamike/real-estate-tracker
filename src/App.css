@@ -53,3 +53,58 @@ body {
 .App-button:hover {
   background-color: #21a1f1;
 }
+
+.deal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+  margin: 40px auto; /* centers horizontally */
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-section {
+  border-top: 1px solid #eee;
+  padding: 12px 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+label {
+  text-align: right;
+  font-weight: 500;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-inline {
+  display: flex;
+  gap: 10px;
+}
+
+.button-row {
+  grid-template-columns: 1fr; /* button centered across full width */
+  text-align: center;
+}
+
+.radio-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
