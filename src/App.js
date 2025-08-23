@@ -18,25 +18,32 @@ const App=()=>{
       <header className="App-header">
         <h1>Real Estate Deal Tracker</h1>
         {!userID && <SignInOptions/>}
-        {userID && <p>Welcome, {userEmail} <br/> <button onClick={logout}>Sign Out</button></p>}
+        {userID && 
+          <div>
+            <h2>Welcome, {userEmail} </h2>  
+            <button className='App-button' onClick={logout}>Sign Out</button>
+          </div>}
       </header>
-      <section className="App-content">
-        <p>
-          This is a basic design for your main application page.
-          You can use this as a starting point to test your components as you build them out.
-        </p>
-        <button className="App-button" onClick={()=>setShowDealForm(!showDealForm)}>
-          Add a Deal
-        </button>
-        {showDealForm && <AddDealForm/>}
-      </section>
-      <section className='App-content'>
-        <button className='App-button' onClick ={()=>setShowMyDeals(!showMyDeals)}>
-          View my Deals
-        </button>
-        {showMyDeals && <DealList/>}
-      </section>
-      {/* You'll add other components here later */}
+      {!userID && <h1>Please sign in to manage your deals.</h1>}
+      {userID &&
+      <>
+        <section className="App-content">
+            <p>
+              This is a basic design for your main application page.
+              You can use this as a starting point to test your components as you build them out.
+            </p>
+            <button className="App-button" onClick={() => setShowDealForm(!showDealForm)}>
+              Add a Deal
+            </button>
+            {showDealForm && <AddDealForm />}
+          </section><section className='App-content'>
+              <button className='App-button' onClick={() => setShowMyDeals(!showMyDeals)}>
+                View my Deals
+              </button>
+              {showMyDeals && <DealList />}
+            </section>
+            {/*add more sections within this area but before the close tag of </>*/}
+        </>}
     </div>
   );
 }

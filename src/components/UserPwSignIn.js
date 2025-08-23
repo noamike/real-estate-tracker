@@ -31,27 +31,28 @@ const UserPwSignIn = () => {
 
     return (
         <form onSubmit={handleSignIn}>
-            <label>
-                Email:
-                <input
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                />
-            </label>
-            <br />
-            <label>
-                Password: (minimun of 6)
-                <input
-                    type="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                />
-            </label>
-            <br />
-            <button type="submit">Sign In</button>
+            <div className='form-section'>
+                <div className='form-row'>
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <br />
+                <div className='form-row'>
+                    <label>Password: (min 6 char)</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+            </div>
+            <button className='App-button' type="submit">Sign In</button>
         </form>
     );
 }
