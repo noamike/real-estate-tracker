@@ -10,8 +10,9 @@ import SignInOptions from './components/SignInOptions';
 const App=()=>{
   //Create variables and states to use later 
   const [showDealForm , setShowDealForm] = useState(false);
-  const [showMyDeals, setShowMyDeals] = useState(false);
   const { userID, logout, userEmail } = useAuth();
+
+  
 
   return (
     <div className="App">
@@ -24,6 +25,7 @@ const App=()=>{
             <button className='App-button' onClick={logout}>Sign Out</button>
           </div>}
       </header>
+
       {!userID && <h1>Please sign in to manage your deals.</h1>}
       {userID &&
       <>
@@ -36,14 +38,14 @@ const App=()=>{
               Add a Deal
             </button>
             {showDealForm && <AddDealForm />}
-          </section><section className='App-content'>
-              <button className='App-button' onClick={() => setShowMyDeals(!showMyDeals)}>
-                View my Deals
-              </button>
-              {showMyDeals && <DealList />}
-            </section>
+          </section>
+          <section className='App-content'>
+            {/* Fetch Deals */}
+            {<DealList/>}
+          </section>
             {/*add more sections within this area but before the close tag of </>*/}
         </>}
+
     </div>
   );
 }
