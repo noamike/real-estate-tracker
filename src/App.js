@@ -7,6 +7,7 @@ import SignInOptions from './components/SignInOptions';
 import DealComponent from './components/DealComponent';
 import ContactComponent from './components/contacts/ContactComponent';
 import NavButtons from './components/NavButtons.js';
+import MainComponent from './components/MainComponent.js';
 
 const App=()=>{
   //Create variables and states to use later 
@@ -28,8 +29,8 @@ const App=()=>{
 
       {!userID && <h1>Please sign in to manage your deals.</h1>}
   
-      {userID && <DealComponent/>}
-      {userID && <ContactComponent/>}
+      {userID && <MainComponent/>}
+
     </div>
   );
 }

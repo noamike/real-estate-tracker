@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/FirebaseConfig";
 
-const ContactList = () => {
+const ContactList = ({ showContacts }) => {
     const [allContacts, setAllContacts] = useState([]);
     const [displayedContacts, setDisplayedContacts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -115,12 +115,17 @@ const ContactList = () => {
         );
     };
 
+    React.useEffect(() => {
+        if (showContacts && !contactsLoaded) {
+            fetchContacts();
+        }
+        if (!showContacts) {
+            setContactsLoaded(false); // Reset loaded state if contacts view is hidden
+        }
+    }, [showContacts]);
+
     return (
         <>
-            <button className='App-button' onClick={fetchContacts} disabled={loading || contactsLoaded}>
-                {loading ? 'Loading Contacts...' : 'Show Contacts'}
-            </button>
-            
             {contactsLoaded && (
                 <form className="deal-form">
                     <h2>Contact List</h2>
