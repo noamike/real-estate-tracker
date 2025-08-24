@@ -45,9 +45,6 @@ const DealEditor = ({ deal, onSave, onCancel }) => {
           additionalCharges: editedAdditionalCharges          
         });
 
-
-      
-
       // Call the parent's onSave function to update the list
       onSave({
           ...deal,
