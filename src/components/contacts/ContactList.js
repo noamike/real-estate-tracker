@@ -1,104 +1,163 @@
-import React from "react";
-import { useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import React, { useState } from "react";
+import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/FirebaseConfig";
 
 const ContactList = () => {
-    const [contacts, setContacts] = useState([]);
+    const [allContacts, setAllContacts] = useState([]);
+    const [displayedContacts, setDisplayedContacts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [selectedContact, setSelectedContact] = useState(null); // New state to track selected contact
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const [selectedContact, setSelectedContact] = useState(null);
     const [selectedLetter, setSelectedLetter] = useState('');
-    const [filteredContacts, setFilteredContacts] = useState(false);
+    const [contactsLoaded, setContactsLoaded] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const contactsPerPage = 25;
+
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
     const fetchContacts = async () => {
         setLoading(true);
         setError(null);
-        setSelectedContact(null); // Clear selected contact when fetching
+        setSelectedContact(null);
         try {
-            console.log('Attempting to Query Database');
-            // Query to find all contacts in the Contacts collection
             const q = query(collection(db, 'Contacts'));
             const querySnapshot = await getDocs(q);
 
-            // Process the fetched documents
             const contactData = [];
             querySnapshot.forEach((doc) => {
-                let fullName = doc.data().firstName + " " + doc.data().lastName;
-                let phone = doc.data().phone;
-                console.log("Contact name is: ", fullName);
-                contactData.push({ id: doc.id, name: fullName, phone: phone });
+                const data = doc.data();
+                const fullName = `${data.firstName} ${data.lastName}`;
+                const phone = data.phone;
+                const lastName = data.lastName || '';
+                
+                contactData.push({ id: doc.id, name: fullName, phone: phone, lastName: lastName });
             });
-            setContacts(contactData);
+            
+            // Sort contacts alphabetically by last name
+            contactData.sort((a, b) => a.lastName.localeCompare(b.lastName));
+
+            setAllContacts(contactData);
+            setDisplayedContacts(contactData);
+            setContactsLoaded(true);
         } catch (err) {
             console.error('Error fetching contacts: ', err);
             setError('Failed to fetch contacts. Please try again.');
-        }finally{
+        } finally {
             setLoading(false);
         }
     };
+    
     const handleSelectContact = (contact) => {
         setSelectedContact(contact);
     };
 
-    // Alphabet array for filtering links
-    const retrievedContacts= () => {
-        if (contacts.length > 0) {
-            return (
-                <>
-                    <form className="deal-form">
-                        <h2>Contact List</h2>
-                        <div className="alphabet-links">
-                            {alphabet.map((letter) => (
-                                <a
-                                    href="#"
-                                    key={letter}
-                                    onClick={e=>{
-                                        e.preventDefault()
-                                        //filtering contacts by last name
-                                        console.log('clicked letter: ', letter);
-                                        setFilteredContacts(true);
-                                        setSelectedLetter(letter);
-                                        const filteredList = contacts.filter(contact => {
-                                            const lastName = contact.name.split(' ').slice(-1)[0]; // Get last name
-                                            return lastName.startsWith(letter);
-                                        });
-                                        setContacts(filteredList);
-                                    }}
-                                >
-                                    {letter}
-                                </a>
-                            ))}
-                        </div>
-                        {selectedLetter && <p>Filtering by last name starting with: {selectedLetter}</p>}
-
-                        {filteredContacts && (
-                            <>
-                            <div className="form-section"/>
-                                {contacts.map((contact) => (
-                                    <div key={contact.id} className="form-row">
-                                        <a href="#" onClick={(e) => { e.preventDefault(); handleSelectContact(contact); }}>
-                                            <label>{contact.name}</label>
-                                        </a>
-                                    </div>
-                                ))}
-                            </>
-                        )}
-                    </form>
-                </>
-            );
-        }
+    const handleFilterByLetter = (letter) => {
+        setSelectedLetter(letter);
+        setCurrentPage(1);
+        const filteredList = allContacts.filter(contact => 
+            contact.lastName.toUpperCase().startsWith(letter)
+        );
+        setDisplayedContacts(filteredList);
     };
+
+    const handleShowAllContacts = () => {
+        setSelectedLetter('');
+        setCurrentPage(1);
+        setDisplayedContacts(allContacts);
+    };
+
+    const indexOfLastContact = currentPage * contactsPerPage;
+    const indexOfFirstContact = indexOfLastContact - contactsPerPage;
+    const currentContacts = displayedContacts.slice(indexOfFirstContact, indexOfLastContact);
+    const totalPages = Math.ceil(displayedContacts.length / contactsPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const renderContactList = () => {
+        if (loading) {
+            return <p>Loading Contacts...</p>;
+        }
+
+        if (error) {
+            return <p className='error-message'>{error}</p>;
+        }
+
+        if (allContacts.length === 0 && contactsLoaded) {
+            return <p>No contacts available. Please add some contacts.</p>;
+        }
+        
+        if (currentContacts.length === 0 && contactsLoaded && (selectedLetter || allContacts.length > 0)) {
+            return <p>No contacts match this letter, choose another letter or add a contact.</p>;
+        }
+
+        return (
+            <>
+                {currentContacts.map((contact) => (
+                    <div key={contact.id} className="contact-item">
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleSelectContact(contact); }}>
+                            <label>{contact.name}</label>
+                        </a>
+                    </div>
+                ))}
+                
+                <div className="pagination">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <button 
+                            key={i + 1} 
+                            onClick={() => paginate(i + 1)}
+                            className={currentPage === i + 1 ? 'active' : ''}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
+            </>
+        );
+    };
+
     return (
         <>
-            <button className='App-button' onClick={fetchContacts} disabled={loading}>
-                {loading ? 'Loading Contacts...' : 'Fetch Contacts'}
+            <button className='App-button' onClick={fetchContacts} disabled={loading || contactsLoaded}>
+                {loading ? 'Loading Contacts...' : 'Show Contacts'}
             </button>
-            {retrievedContacts()}
-            {error && <p className='error-message'>{error}</p>}
             
-            {/* Render contacts here */}
+            {contactsLoaded && (
+                <form className="deal-form">
+                    <h2>Contact List</h2>
+                    <h3>
+                        <p>            
+                            <a href="#" onClick={e => { e.preventDefault(); handleShowAllContacts(); }}>Show All Contacts</a> 
+                            <br/>
+                            or
+                            <br/>
+                            Choose a letter to filter Contacts by Last Name
+                        </p>
+                    </h3>
+                    <div className="alphabet-links">
+                        {alphabet.map((letter) => (
+                            <a
+                                href="#"
+                                key={letter}
+                                onClick={e => { e.preventDefault(); handleFilterByLetter(letter); }}
+                                className={selectedLetter === letter ? 'active' : ''}
+                            >
+                                {letter}
+                            </a>
+                        ))}
+                    </div>
+                    {selectedLetter && <p>Filtering by last name starting with: {selectedLetter}</p>}
+                    
+                    {renderContactList()}
+                </form>
+            )}
+
+            {selectedContact && (
+                <div className="selected-contact-details">
+                    <h3>Selected Contact</h3>
+                    <p><strong>Name:</strong> {selectedContact.name}</p>
+                    <p><strong>Phone:</strong> {selectedContact.phone}</p>
+                </div>
+            )}
         </>
     );
 };
