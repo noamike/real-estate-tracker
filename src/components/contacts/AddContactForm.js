@@ -134,7 +134,7 @@ const AddContact = () => {
                 />
             </div>
             <div className='form-row button-row'>
-                <button type='submit' className='App-button'>Submit</button>
+                <button type='submit' className='form-button'>Submit</button>
             </div>
         </form>
     );

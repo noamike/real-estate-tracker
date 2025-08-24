@@ -250,7 +250,7 @@ const DealEditor = ({ deal, onSave, onCancel }) => {
       )}
       
         
-        <button className="App-button" type="button" onClick={handleSave} disabled={loading}>
+        <button className="form-button" type="button" onClick={handleSave} disabled={loading}>
           {loading ? "Saving..." : "Save Changes"}
         </button>
         <button className="App-button" type="button" onClick={onCancel} disabled={loading}>
