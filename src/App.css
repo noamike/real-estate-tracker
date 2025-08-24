@@ -108,3 +108,10 @@ select {
   gap: 16px;
   align-items: center;
 }
+
+.alphabet-links {
+  margin-bottom: 16px;
+}
+.alphabet-links a {
+  margin-right: 8px;
+}

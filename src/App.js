@@ -3,14 +3,12 @@ import React, {useState,useEffect} from 'react';
 import useAuth from './hooks/useAuth';
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css'; // Import the CSS file for App.js
-import AddDealForm from "./components/AddDealForm";
-import DealList from './components/DealList';
 import SignInOptions from './components/SignInOptions';
 import DealComponent from './components/DealComponent';
+import ContactComponent from './components/contacts/ContactComponent';
 
 const App=()=>{
   //Create variables and states to use later 
-  const [showDealForm , setShowDealForm] = useState(false);
   const { userID, logout, userEmail } = useAuth();
 
   
@@ -29,7 +27,7 @@ const App=()=>{
 
       {!userID && <h1>Please sign in to manage your deals.</h1>}
       {userID && <DealComponent/>}
-
+      {userID && <ContactComponent/>}
     </div>
   );
 }
