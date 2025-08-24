@@ -17,7 +17,7 @@ import { render } from "@testing-library/react";
 
 const AddDeal = () =>{
     //create variables to use later 
-    const {userID} = useAuth();
+    const {userEmail, userID} = useAuth();
     const [isLease, setIsLease] = useState(false);
     const [isSale, setIsSale] = useState(false);
     //1. Form Data tables
@@ -90,14 +90,28 @@ const AddDeal = () =>{
             console.log('Document Successfully Written');
             alert('Deal Added Successfully');
 
-            //clear form
+            //clears form
             setDealData({
                 leaseOrSale:'',
                 dealType:'',
                 dealName: '',
                 buildingAddress: '',
                 mainAgent: '',
+                leaseTerm:'',
+                leaseDate:'',
+                leaseExpiration:'',
+                leaseRate:'',
+                additionalCharges:'',
+                sellerName:'',
+                saleDate:'',
+                salePrice:'',
+                ppsq:'',
             });
+
+            // Resets the two dropdowns too
+            setSelectedDealTypeOption('');
+            setSelectedLeaseOrSaleOption('');
+
         } catch {
             console.log('Error adding document');
             alert('Failed to add deal');
@@ -110,10 +124,20 @@ const AddDeal = () =>{
 
     };
     //5. Decide whether dropdown was picked between office, retail, or industrial
-    const [selectedOption, setSelectedOption] = useState('');
+    const [selectedDealTypeOption, setSelectedDealTypeOption] = useState('');
     const handleDealType = (event) => {
         const value = event.target.value;
-        setSelectedOption(value);
+        setSelectedDealTypeOption(value);
+
+        if (value === '') {
+            setDealData(prev => ({
+                ...prev,
+                dealType: '',
+                leaseOrSale: ''
+            }));
+            setSelectedLeaseOrSaleOption('');
+            return;
+        }
 
         if (value === 'industrial') {
             setDealData(prev => ({
@@ -121,41 +145,50 @@ const AddDeal = () =>{
                 dealType: 'industrial',
                 leaseOrSale: 'sale'
             }));
+            setSelectedLeaseOrSaleOption('sale');
         } else {
             setDealData(prev => ({
                 ...prev,
                 dealType: value,
                 leaseOrSale: '' // reset leaseOrSale for office/retail
             }));
+            setSelectedLeaseOrSaleOption('');
         }
     };
 
-    const renderType = () => {
-        if (selectedOption === 'office' || selectedOption === 'retail') {
+    const [selectedLeaseOrSaleOption, setSelectedLeaseOrSaleOption] = useState('');
+    const handleLeaseOrSaleOption = (event) => {
+        const value = event.target.value;
+        setSelectedLeaseOrSaleOption(value);
+        
+        if(value === 'lease'){
+            setDealData(prev => ({
+                ...prev,
+                leaseOrSale: 'lease'
+            }));
+        } else if(value === 'sale'){
+            setDealData(prev => ({
+                ...prev,
+                leaseOrSale: 'sale'
+            }));
+        } else {
+            setDealData(prev => ({
+                ...prev,
+                leaseOrSale: ''
+            }));
+        }
+    };
+
+    const renderDealType = () => {
+        if (selectedDealTypeOption === 'office' || selectedDealTypeOption === 'retail') {
             return (
                 <div className="form-row">
-                    <label>Choose Lease or Sale:</label>
-                    <div className="radio-group">
-                        <input
-                            type="radio"
-                            id="lease"
-                            value="lease"
-                            name="leaseOrSale"
-                            checked={dealData.leaseOrSale === "lease"}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="lease">Lease</label>
-
-                        <input
-                            type="radio"
-                            id="sale"
-                            value="sale"
-                            name="leaseOrSale"
-                            checked={dealData.leaseOrSale === "sale"}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="sale">Sale</label>
-                    </div>
+                    <label htmlFor="leaseOrSale">Choose Lease or Sale:</label>
+                    <select id="leaseOrSale" name="leaseOrSale" value={selectedLeaseOrSaleOption} onChange={handleLeaseOrSaleOption} required>
+                        <option value=""></option>
+                        <option value="lease">Lease</option>
+                        <option value="sale">Sale</option>
+                    </select>
                 </div>
             );
         } else {
@@ -191,6 +224,17 @@ const AddDeal = () =>{
             </>
         )
     };
+
+    const renderStatusMessage = () => {
+    if (dealData.dealType === "") {
+        return <div>Please select a Deal Type to continue.</div>;
+    } else if (dealData.leaseOrSale === "") {
+        return <div>Please select Lease or Sale to continue.</div>;
+    } else {
+        return null;
+    }
+};
+
     return(
         <form onSubmit={handleSubmit} className="deal-form">
             <h2>Add a New Deal</h2>
@@ -198,14 +242,15 @@ const AddDeal = () =>{
             {/* Deal Type */}
             <div className="form-row">
                 <label htmlFor="dealType">Deal Type:</label>
-                <select id="dealType" name="dealType" value={selectedOption} onChange={handleDealType} required>
-                    <option value="none"></option>
+                <select id="dealType" name="dealType" value={selectedDealTypeOption} onChange={handleDealType} required>
+                    <option value=""></option>
                     <option value="office">Office</option>
                     <option value="retail">Retail</option>
                     <option value="industrial">Industrial</option>
                 </select>
-                {renderType()}
             </div>
+            {renderDealType()}
+            {renderStatusMessage()}
 
             {/* Lease-specific fields */}
             {dealData.leaseOrSale === "lease" && (
@@ -315,7 +360,7 @@ const AddDeal = () =>{
                 </div>
             )}
 
-            <h3>Deal will be saved with user {userID} as main Agent</h3>
+            <h3>Deal will be saved with user {userEmail} as main Agent</h3>
 
             <div className="form-row button-row">
                 <button type="submit" className="App-button">Submit</button>
