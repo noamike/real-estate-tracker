@@ -6,6 +6,7 @@ import './App.css'; // Import the CSS file for App.js
 import AddDealForm from "./components/AddDealForm";
 import DealList from './components/DealList';
 import SignInOptions from './components/SignInOptions';
+import DealComponent from './components/DealComponent';
 
 const App=()=>{
   //Create variables and states to use later 
@@ -27,24 +28,7 @@ const App=()=>{
       </header>
 
       {!userID && <h1>Please sign in to manage your deals.</h1>}
-      {userID &&
-      <>
-        <section className="App-content">
-            <p>
-              This is a basic design for your main application page.
-              You can use this as a starting point to test your components as you build them out.
-            </p>
-            <button className="App-button" onClick={() => setShowDealForm(!showDealForm)}>
-              Add a Deal
-            </button>
-            {showDealForm && <AddDealForm />}
-          </section>
-          <section className='App-content'>
-            {/* Fetch Deals */}
-            {<DealList/>}
-          </section>
-            {/*add more sections within this area but before the close tag of </>*/}
-        </>}
+      {userID && <DealComponent/>}
 
     </div>
   );
