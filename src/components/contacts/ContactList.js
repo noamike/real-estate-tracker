@@ -8,6 +8,10 @@ const ContactList = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedContact, setSelectedContact] = useState(null); // New state to track selected contact
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const [selectedLetter, setSelectedLetter] = useState('');
+    const [filteredContacts, setFilteredContacts] = useState(false);
+
     const fetchContacts = async () => {
         setLoading(true);
         setError(null);
@@ -38,20 +42,49 @@ const ContactList = () => {
         setSelectedContact(contact);
     };
 
+    // Alphabet array for filtering links
     const retrievedContacts= () => {
         if (contacts.length > 0) {
             return (
                 <>
                     <form className="deal-form">
                         <h2>Contact List</h2>
-                        <div className="form-section"/>
-                        {contacts.map((contact) => (
-                            <div key={contact.id} className="form-row">
-                                <a href="#" onClick={(e) => { e.preventDefault(); handleSelectContact(contact); }}>
-                                    <label>{contact.name}</label>
+                        <div className="alphabet-links">
+                            {alphabet.map((letter) => (
+                                <a
+                                    href="#"
+                                    key={letter}
+                                    onClick={e=>{
+                                        e.preventDefault()
+                                        //filtering contacts by last name
+                                        console.log('clicked letter: ', letter);
+                                        setFilteredContacts(true);
+                                        setSelectedLetter(letter);
+                                        const filteredList = contacts.filter(contact => {
+                                            const lastName = contact.name.split(' ').slice(-1)[0]; // Get last name
+                                            return lastName.startsWith(letter);
+                                        });
+                                        setContacts(filteredList);
+                                    }}
+                                >
+                                    {letter}
                                 </a>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+                        {selectedLetter && <p>Filtering by last name starting with: {selectedLetter}</p>}
+
+                        {filteredContacts && (
+                            <>
+                            <div className="form-section"/>
+                                {contacts.map((contact) => (
+                                    <div key={contact.id} className="form-row">
+                                        <a href="#" onClick={(e) => { e.preventDefault(); handleSelectContact(contact); }}>
+                                            <label>{contact.name}</label>
+                                        </a>
+                                    </div>
+                                ))}
+                            </>
+                        )}
                     </form>
                 </>
             );

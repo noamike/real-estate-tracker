@@ -7,9 +7,9 @@ const DealComponent = () => {
 
     return (
         <>
-            <button className="App-button" onClick={() => setShowDealForm(!showDealForm)}>
-              Add a Deal
-            </button>
+          <button className="App-button" onClick={() => setShowDealForm(!showDealForm)}>
+            Add a Deal
+          </button>
             {showDealForm && <AddDealForm />}
           <section className='App-content'>
             {/* Fetch Deals */}
