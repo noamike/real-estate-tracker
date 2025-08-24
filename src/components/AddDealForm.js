@@ -55,35 +55,37 @@ const AddDeal = () =>{
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try{
-            //create a doc and setting the deal ID to be the name
+        try {
             const newDealRef = collection(db, 'Deals');
-            if(dealData.dealType === 'lease'){
+            if (dealData.leaseOrSale === 'lease') {
                 await addDoc(newDealRef, {
-                    dealType: dealData.dealType,                    
-                    leaseOrSale: dealData.leaseOrSale,                    
+                    dealType: dealData.dealType,
+                    leaseOrSale: dealData.leaseOrSale,
                     dealName: dealData.dealName,
-                    buildingAddress: dealData.buildingAddress,                    
+                    buildingAddress: dealData.buildingAddress,
                     leaseTerm: dealData.leaseTerm,
                     leaseDate: dealData.leaseDate,
                     leaseExpiration: dealData.leaseExpiration,
+                    leaseRate: dealData.leaseRate,
                     additionalCharges: dealData.additionalCharges,
                     mainAgent: userID
                 });
-            }
-            if(dealData.leaseOrSale === 'sale'){
+            } else if (dealData.leaseOrSale === 'sale') {
                 await addDoc(newDealRef, {
-                    dealType: dealData.dealType,                    
-                    leaseOrSale: dealData.leaseOrSale,                    
+                    dealType: dealData.dealType,
+                    leaseOrSale: dealData.leaseOrSale,
                     dealName: dealData.dealName,
-                    buildingAddress: dealData.buildingAddress,                    
+                    buildingAddress: dealData.buildingAddress,
                     sellerName: dealData.sellerName,
                     saleDate: dealData.saleDate,
                     salePrice: dealData.salePrice,
                     ppsq: dealData.ppsq,
                     mainAgent: userID
                 });
-             }
+            } else {
+                alert('Please select Lease or Sale.');
+                return;
+            }
 
             console.log('Document Successfully Written');
             alert('Deal Added Successfully');
@@ -96,7 +98,7 @@ const AddDeal = () =>{
                 buildingAddress: '',
                 mainAgent: '',
             });
-        } catch{
+        } catch {
             console.log('Error adding document');
             alert('Failed to add deal');
         }
@@ -109,40 +111,55 @@ const AddDeal = () =>{
     };
     //5. Decide whether dropdown was picked between office, retail, or industrial
     const [selectedOption, setSelectedOption] = useState('');
-    const handleDealType = (event) =>{
-        setSelectedOption(event.target.value);
+    const handleDealType = (event) => {
+        const value = event.target.value;
+        setSelectedOption(value);
 
+        if (value === 'industrial') {
+            setDealData(prev => ({
+                ...prev,
+                dealType: 'industrial',
+                leaseOrSale: 'sale'
+            }));
+        } else {
+            setDealData(prev => ({
+                ...prev,
+                dealType: value,
+                leaseOrSale: '' // reset leaseOrSale for office/retail
+            }));
+        }
     };
-    const renderType = () =>{
-        if(selectedOption === 'office' || selectedOption === 'retail'){
-            return(
+
+    const renderType = () => {
+        if (selectedOption === 'office' || selectedOption === 'retail') {
+            return (
                 <div className="form-row">
                     <label>Choose Lease or Sale:</label>
                     <div className="radio-group">
                         <input
-                        type="radio"
-                        id="lease"
-                        value="lease"
-                        name="leaseOrSale"
-                        onChange={handleChange}
+                            type="radio"
+                            id="lease"
+                            value="lease"
+                            name="leaseOrSale"
+                            checked={dealData.leaseOrSale === "lease"}
+                            onChange={handleChange}
                         />
                         <label htmlFor="lease">Lease</label>
 
                         <input
-                        type="radio"
-                        id="sale"
-                        value="sale"
-                        name="leaseOrSale"
-                        onChange={handleChange}
+                            type="radio"
+                            id="sale"
+                            value="sale"
+                            name="leaseOrSale"
+                            checked={dealData.leaseOrSale === "sale"}
+                            onChange={handleChange}
                         />
                         <label htmlFor="sale">Sale</label>
                     </div>
                 </div>
-            )
-        }
-        else if(selectedOption === 'industrial'){
-            dealData.leaseOrSale = 'sale';
-            dealData.dealType = 'industrial';
+            );
+        } else {
+            return null;
         }
     };
 
