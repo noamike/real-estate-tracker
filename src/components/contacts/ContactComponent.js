@@ -1,5 +1,6 @@
 import {useSate, useState} from 'react';
 import AddContactForm from './AddContactForm';
+import ContactList from './ContactList';
 
 const ContactComponent = () => {
     const [showAddContactForm, setShowAddContactForm] = useState(false);
@@ -10,6 +11,10 @@ const ContactComponent = () => {
                 Add a Contact
             </button>
             {showAddContactForm && <AddContactForm />}
+            <section className='App-content'>
+                {/* Fetch Contacts */}
+                {<ContactList/>}
+            </section>
         </>
     )
 }
