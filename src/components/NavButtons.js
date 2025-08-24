@@ -23,20 +23,13 @@ const NavButtons = ({ fetchDeals, loading, showAddDeal, showAddContact, showCont
       )}
       {fetchDeals && (
         <button
-            className="App-button"
-            onClick={fetchDeals}
+            className={`App-button ${selected === "fetch" ? "selected" : ""}`}
+            onClick={() => handleClick("fetch", fetchDeals)}
             disabled={loading || !userID}
             >
             {loading ? "Loading..." : "Fetch Deals"}
         </button>
 
-        // <button
-        //   className={`App-button ${selected === "fetch" ? "selected" : ""}`}
-        //   onClick={() => handleClick("fetch", fetchDeals)}
-        //   disabled={loading}
-        // >
-        //   {loading ? "Loading..." : "Fetch Deals"}
-        // </button>
       )}
       {showAddContact && (
         <button
