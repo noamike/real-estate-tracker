@@ -57,11 +57,34 @@ const DealList = () => {
     setSelectedDeal(null); // Exit edit mode
   };
 
+  const retrievedDeals = () => {
+    if (deals.length > 0) {
+      return (
+        <>
+          <form className="deal-form">
+          <h2>Retrieved Deals:</h2>
+          <div className="form-section"/>
+            {deals.map((deal) => (
+              <div key={deal.id} className="form-row">
+                <a href="#" onClick={(e) => { e.preventDefault(); handleSelectDeal(deal); }}>
+                  <label>{deal.name}</label>
+                </a>
+              </div>
+            ))}
+          </form>
+        </> 
+    );
+    }     
+  }
+
+
   return (
-    <div>
+    <>
       <button className="App-button" onClick={fetchDeals} disabled={loading}>
         {loading ? 'Loading...' : 'Fetch Deals'}
       </button>
+
+      {retrievedDeals()}
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       
@@ -87,7 +110,7 @@ const DealList = () => {
           )}
         </ul>
       )}
-    </div>
+    </>
   );
 };
 
