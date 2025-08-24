@@ -4,17 +4,27 @@ import useAuth from "../hooks/useAuth";
 import { db } from "../firebase/FirebaseConfig";
 import DealEditor from "./DealEditor";
 
-const DealList = () => {
-  const [deals, setDeals] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedDeal, setSelectedDeal] = useState(null);
-  const [fetched, setFetched] = useState(false); // Track if deals have been fetched
+const DealList = ({
+  deals,
+  loading,
+  error,
+  fetched,
+  selectedDeal,
+  setSelectedDeal,
+  setDeals,
+  handleSaveDeal,
+  handleCancelEdit
+}) => {
+  console.log(deals)
+  const [localDeals, setLocalDeals] = useState(deals);
+  const [localLoading, setLocalLoading] = useState(loading);
+  const [localError, setLocalError] = useState(error);
+  const [fetchedDeals, setFetchedDeals] = useState(fetched);
   const { userID } = useAuth();
 
   const fetchDeals = async () => {
-    setLoading(true);
-    setError(null);
+    setLocalLoading(true);
+    setLocalError(null);
     setSelectedDeal(null);
     try {
       const q = query(collection(db, 'Deals'), where("mainAgent", "==", userID));
@@ -51,12 +61,12 @@ const DealList = () => {
           AdditionalCharges: propertyAdditionalCharges
         });
       });
-      setDeals(dealData);
-      setFetched(true); // Mark as fetched
+      setLocalDeals(dealData);
+      setFetchedDeals(true);
     } catch (err) {
-      setError("Failed to fetch deals.");
+      setLocalError("Failed to fetch deals.");
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
   };
 
@@ -64,12 +74,12 @@ const DealList = () => {
     setSelectedDeal(deal);
   };
 
-  const handleSaveDeal = (updatedDeal) => {
+  const handleSave = (updatedDeal) => {
     setDeals(deals.map(deal => deal.id === updatedDeal.id ? updatedDeal : deal));
     setSelectedDeal(null);
   };
 
-  const handleCancelEdit = () => {
+  const handleCancel = () => {
     setSelectedDeal(null);
   };
 
@@ -82,7 +92,7 @@ const DealList = () => {
           {deals.map((deal) => (
             <div key={deal.id} className="form-row">
               <a href="#" onClick={(e) => { e.preventDefault(); handleSelectDeal(deal); }}>
-                <label>{deal.name}</label>
+                <label>{deal.dealName}</label>
               </a>
             </div>
           ))}
@@ -95,10 +105,6 @@ const DealList = () => {
 
   return (
     <>
-      <button className="App-button" onClick={fetchDeals} disabled={loading}>
-        {loading ? 'Loading...' : 'Fetch Deals'}
-      </button>
-
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {/* Only show deals after fetch button is clicked */}
@@ -108,8 +114,8 @@ const DealList = () => {
       {selectedDeal && (
         <DealEditor 
           deal={selectedDeal} 
-          onSave={handleSaveDeal} 
-          onCancel={handleCancelEdit} 
+          onSave={handleSave} 
+          onCancel={handleCancel} 
         />
       )}
     </>

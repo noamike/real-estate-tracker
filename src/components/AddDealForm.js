@@ -363,7 +363,7 @@ const AddDeal = () =>{
             <h3>Deal will be saved with user {userEmail} as main Agent</h3>
 
             <div className="form-row button-row">
-                <button type="submit" className="App-button">Submit</button>
+                <button type="submit" className="form-button">Submit</button>
             </div>
             </form>
 

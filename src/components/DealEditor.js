@@ -3,21 +3,23 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/FirebaseConfig"; // Adjust path as needed
 
 const DealEditor = ({ deal, onSave, onCancel }) => {
-  const [editedAddress, setEditedAddress] = useState(deal.Address);
-  const [editedName, setEditedName] = useState(deal.name);
-  const [editedType, setEditedType] = useState(deal.Type || "");
-  const [editedLeaseOrSale, setEditedLeaseOrSale] = useState(deal.LeaseOrSale || "");
-  const [editedPPSQ, setEditedPPSQ] = useState(deal.PPSQ || "");
-  const [editedSaleDate, setEditedSaleDate] = useState(deal.SaleDate || "");
-  const [editedSalePrice, setEditedSalePrice] = useState(deal.SalePrice || "");
-  const [editedSellerName, setEditedSellerName] = useState(deal.SellerName || "");
-  const [editedLeaseTerm, setEditedLeaseTerm] = useState(deal.LeaseTerm || "");
-  const [editedLeaseDate, setEditedLeaseDate] = useState(deal.LeaseDate || "");
-  const [editedLeaseExpiration, setEditedLeaseExpiration] = useState(deal.LeaseExpiration || "");
-  const [editedAdditionalCharges, setEditedAdditionalCharges] = useState(deal.AdditionalCharges || "");
-  const [editedLeaseRate, setEditedLeaseRate] = useState(deal.LeaseRate || "");
+  const [editedAddress, setEditedAddress] = useState(deal.buildingAddress || "");
+  const [editedName, setEditedName] = useState(deal.dealName || "");
+  const [editedType, setEditedType] = useState(deal.dealType || "");
+  const [editedLeaseOrSale, setEditedLeaseOrSale] = useState(deal.leaseOrSale || "");
+  const [editedPPSQ, setEditedPPSQ] = useState(deal.ppsq || "");
+  const [editedSaleDate, setEditedSaleDate] = useState(deal.saleDate || "");
+  const [editedSalePrice, setEditedSalePrice] = useState(deal.salePrice || "");
+  const [editedSellerName, setEditedSellerName] = useState(deal.sellerName || "");
+  const [editedLeaseTerm, setEditedLeaseTerm] = useState(deal.leaseTerm || "");
+  const [editedLeaseDate, setEditedLeaseDate] = useState(deal.leaseDate || "");
+  const [editedLeaseExpiration, setEditedLeaseExpiration] = useState(deal.leaseExpiration || "");
+  const [editedAdditionalCharges, setEditedAdditionalCharges] = useState(deal.additionalCharges || "");
+  const [editedLeaseRate, setEditedLeaseRate] = useState(deal.leaseRate || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  console.log("DealEditor received deal:", deal);
 
   const handleSave = async () => {
     setLoading(true);
@@ -135,7 +137,7 @@ const DealEditor = ({ deal, onSave, onCancel }) => {
       <h2>Edit Deal</h2>
       {/* Form fields for editing the deal */}
       {/* For simplicity, only editing the address here */}
-      {deal.LeaseOrSale === 'lease' && (
+      {deal.leaseOrSale === 'lease' && (
         <>
           {editDefaults()}
           <div className="form-inline">
@@ -196,7 +198,7 @@ const DealEditor = ({ deal, onSave, onCancel }) => {
         </>
       )}
 
-      {deal.LeaseOrSale === 'sale' && (
+      {deal.leaseOrSale === 'sale' && (
         <>
           {editDefaults()}
           <div className="form-inline">
