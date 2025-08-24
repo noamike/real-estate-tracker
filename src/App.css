@@ -40,18 +40,28 @@ body {
 }
 
 .App-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
+  background-color: #fff;
+  color: #000;
+  padding: .7em 1.2em;
+  border: 2px solid #007bff;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1em;
   transition: background-color 0.3s ease;
 }
 
+.App-button.selected {
+  background-color: #007bff;
+  color: #f0f0f0;
+  border-color: #007bff;
+}
+
 .App-button:hover {
-  background-color: #21a1f1;
+  background-color: #007bff;
+}
+
+.App-button:hover:not(.selected) {
+  background-color: #e6e6e6;
 }
 
 .deal-form {
@@ -114,4 +124,33 @@ select {
 }
 .alphabet-links a {
   margin-right: 8px;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-evenly; /* distributes buttons evenly across width */
+  align-items: center;           /* vertical alignment */
+  width: 100%;                   /* take full available width */
+  margin: 1rem 0;                /* some spacing above/below */
+}
+
+.nav-buttons .App-button {
+  flex: 1;               /* each button grows equally */
+  max-width: 200px;      /* optional: prevent buttons from becoming too wide */
+  margin: 0 0.5rem;      /* spacing between buttons */
+}
+
+.form-button {
+  background-color: #007bff;
+  color: #f0f0f0;
+  border: 2px solid #007bff;
+  padding: 0.7rem 1.2rem;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.form-button:hover {
+  background-color: #0069d9; /* darker blue on hover */
 }

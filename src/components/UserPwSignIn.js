@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import '../App.css';
 import useAuth from '../hooks/useAuth';
 
 const UserPwSignIn = () => {
@@ -24,7 +25,7 @@ const UserPwSignIn = () => {
         return (
             <div>
                 <p>Signed in! User ID: {userID}</p>
-                <button onClick={logout}>Sign Out</button>
+                <button className='form-button' onClick={logout}>Sign Out</button>
             </div>
         );
     }
@@ -52,7 +53,7 @@ const UserPwSignIn = () => {
                     />
                 </div>
             </div>
-            <button className='App-button' type="submit">Sign In</button>
+            <button className='form-button' type="submit">Sign In</button>
         </form>
     );
 }
