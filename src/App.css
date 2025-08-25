@@ -84,10 +84,16 @@ body {
 
 .form-row {
   display: grid;
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: 1fr 3fr;
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
+}
+.form-row label {
+  text-align: center;
+}
+.form-row textarea {
+  resize: vertical;
 }
 
 label {
@@ -97,7 +103,6 @@ label {
 
 input,
 select {
-  width: 100%;
   padding: 6px 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -106,6 +111,9 @@ select {
 .form-inline {
   display: flex;
   gap: 10px;
+}
+.form-inline input {
+  width: 100%;
 }
 
 .button-row {
