@@ -34,9 +34,10 @@ const DealList = ({
 					<h2>Retrieved Deals:</h2>
 					<div className="form-section" />
 					{deals.map((deal) => (
-						<div key={deal.id} className="form-row">
+						<div key={deal.id} className="flex">
 							<a
 								href="#"
+								className="m-auto p-2 pl-4 pr-4 rounded-lg transition-all duration-300 border-1 border-white hover:shadow-lg hover:border-black"
 								onClick={(e) => {
 									e.preventDefault();
 									handleSelectDeal(deal);
@@ -44,6 +45,15 @@ const DealList = ({
 							>
 								<label>{deal.dealName}</label>
 							</a>
+							<button
+								className="p-2 rounded bg-red-400 transition-all duration-300 border-1 border-white hover:shadow-lg hover:border-black"
+								type="button"
+								onClick={(e) => {
+									alert("this doesn't work yet");
+								}}
+							>
+								✗
+							</button>
 						</div>
 					))}
 				</form>
