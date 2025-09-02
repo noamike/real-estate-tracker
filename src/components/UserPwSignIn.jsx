@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import '../App.css';
 import useAuth from '../hooks/useAuth';
 
-const UserPwSignIn = () => {
+const UserPwSignIn = ({ onSignInSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { userID, logout, verifyEmailPassword } = useAuth();
@@ -12,8 +12,10 @@ const UserPwSignIn = () => {
         const success = await verifyEmailPassword(email, password);
         if (success.status === 'signed-in') {
             console.log('Successfully signed in');
+            onSignInSuccess();
         } else if (success.status === 'created') {
             console.log('Account created and signed in');
+            onSignInSuccess();
         } else {
             console.error('Sign-in error:', success.error);
         }
@@ -21,14 +23,14 @@ const UserPwSignIn = () => {
         // For example, you can use Firebase's signInWithEmailAndPassword method
     };
 
-    if (userID) {
+    /*if (userID) {
         return (
             <div>
                 <p>Signed in! User ID: {userID}</p>
                 <button className='form-button' onClick={logout}>Sign Out</button>
             </div>
         );
-    }
+    }*/
 
     return (
         <form onSubmit={handleSignIn}>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useAuth from '../hooks/useAuth';
 
-const EmailSignIn = () => {
+const EmailSignIn = ({ onSignInSuccess }) => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const { userEmail, sendEmailLink, userID } = useAuth();
