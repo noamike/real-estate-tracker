@@ -12,7 +12,7 @@ const NavButtons = ({ fetchDeals, loading, showAddDeal, showAddContact, showCont
   };
 
   return (
-    <div className="nav-buttons">
+    <div className="nav-buttons flex-col sm:flex-row">
       {showAddDeal && (
         <button
           className={`App-button ${selected === "add" ? "selected" : ""}`}

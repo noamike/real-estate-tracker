@@ -148,7 +148,7 @@ select {
 .nav-buttons .App-button {
 	flex: 1; /* each button grows equally */
 	max-width: 200px; /* optional: prevent buttons from becoming too wide */
-	margin: 0 0.5rem; /* spacing between buttons */
+	margin: 0.5rem; /* spacing between buttons */
 }
 
 .form-button {
